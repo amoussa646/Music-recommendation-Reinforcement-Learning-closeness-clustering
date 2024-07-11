@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import plotly.offline as plt
 import plotly.graph_objs as go
-plt.init_notebook_mode()
+
 import os
 import random
 import math
@@ -109,21 +109,21 @@ def reinforcement_learning(s=200, N=5):
     Songs = Songs.copy()
     
     user_features = np.zeros(NFEATURE)
-    print "Select song features that you like"
+    print ("Select song features that you like")
     Features = ["1980s", "1990s", "2000s", "2010s", "2020s", "Pop", "Rock", "Country", "Folk", "Dance", "Grunge", "Love", "Metal", "Classic", "Funk", "Electric", "Acoustic", "Indie", "Jazz", "SoundTrack", "Rap"];
     for i in range (0,len(Features)):
         print (str(i+1) + ". " + Features[i])
     choice = "y"
     likedFeat = set()
     while (choice.lower().strip() == "y"):
-        num = raw_input("Enter number associated with feature: ")
+        num = input("Enter number associated with feature: ")
         likedFeat.add(Features[int(num)-1])
-        choice=raw_input("Do you want to add another feature? (y/n) ");
+        choice=input("Do you want to add another feature? (y/n) ");
     for i in range (0,len(Features)):
         if(Features[i] in likedFeat):
             user_features[i] = 1.0/len(likedFeat)
     
-    print "\n\nRate following " + str(N) + " songs. So that we can know your taste.\n"
+    print ("\n\nRate following " + str(N) + " songs. So that we can know your taste.\n")
     for t in range(N):
         if(t>=10):
             recommendation = greedy_choice_no_t(user_features, t+1, s, 0.3)
@@ -153,23 +153,23 @@ user_features = reinforcement_learning()
 #UI
 choice = "y"
 while choice == "y":
-    print "\nWait \n\n"
+    print ("\nWait \n\n")
     recommendation = all_recommendation(user_features)
     i=0
     for music in recommendation:
         print (str(i+1) + ". " + music.index[0])
         i += 1
     
-    print "\n\nRate songs one by one or leave it blank"
+    print ("\n\nRate songs one by one or leave it blank")
     for music in recommendation:
         if(music.index[0] in ratedSongs):
-            print "Song already rated"
+            print ("Song already rated")
             continue
-        inn = raw_input("Rate " + music.index[0] + " (1/10): ")
+        inn = input("Rate " + music.index[0] + " (1/10): ")
         if(inn.strip() != ""):
             ratedSongs.add(music.index[0])
             song_features = get_song_features(music)
             user_features = update_features(user_features, song_features, int(inn), totReco)
         
     
-    choice = raw_input("\nDo you want more recommendations? (y/n) ").strip()
+    choice = input("\nDo you want more recommendations? (y/n) ").strip()
